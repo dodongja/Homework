@@ -1,6 +1,7 @@
 import {
     FETCH_PRODUCT_LIST,
-    FETCH_PRODUCT
+    FETCH_PRODUCT,
+    FEHTCH_HOTEL_DETAIL_LIST
 } from './mutation-types'
 
 export default {

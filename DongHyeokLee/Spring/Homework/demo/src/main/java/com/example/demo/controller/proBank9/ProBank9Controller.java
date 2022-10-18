@@ -47,6 +47,7 @@ public class ProBank9Controller {
         LottoResponse lr = new LottoResponse(lot);
 
         return lr;
+        //2,14,17,33,34,39
 
 
 

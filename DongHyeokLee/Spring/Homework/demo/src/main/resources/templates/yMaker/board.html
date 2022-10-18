@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>yMaker</title>
+    <style>
+        input {
+         text-align: center;
+        }
+
+        input::placeholder {
+          color: black;
+        }
+    </style>
+</head>
+
+<body>
+ <h1>Grid그리드</h1>
+
+ <form id="board" th:object="${board}" th:action="@{/board/save}" method="post">
+ <table border="1">
+    <tr>
+        <td>
+            <input type="text" name="id" th:field="*{id}" placeholder="아이디"/>
+            <input type="text" name="name" th:field="*{name}" placeholder="이름"/>
+
+            <input type="radio" id="male" name="gender" value="남자" th:field="*{gender}">
+            <label for="male">남자</label>
+            <input type="radio" id="female" name="gender" value="여자" th:field="*{gender}">
+            <label for="female">여자</label>
+
+            <br>
+
+            <select id="country" name="country" onchange="loadCity(this)" th:field="*{country}">
+                <option value="">국가</option>
+                <option value="한국">한국</option>
+                <option value="일본">일본</option>
+            </select>
+
+            <select id="city" name="city" th:field="*{city}">
+                <option value="">도시</option>
+            </select>
+        </td>
+    </tr>
+ </table>
+
+ <div>
+     <button type="submit">조회</button>
+     <button type="submit">저장</button>
+     <button type="button" id="delBtn">삭제</button>
+ </div>
+ </form>
+ <table border="1">
+     <tr>
+         <th><input type="checkbox" value="checkAll" onclick="checkAll(this)"></th>
+         <th align="center" width="80">아이디</th>
+         <th align="center" width="80">이름</th>
+         <th align="center" width="80">성별</th>
+         <th align="center" width="80">국가</th>
+         <th align="center" width="80">도시</th>
+     </tr>
+
+     <tr th:if="${#lists.isEmpty(list)}">
+         <td colspan="5">
+             현재 등록된 게시물이 없습니다!
+         </td>
+     </tr>
+
+     <tr th:each="board : ${list}">
+         <td>
+             <input type="checkbox" name="checkbox" th:value="${board.boardNo}">
+         </td>
+         <td align="left" th:text="${board.id}">
+         </td>
+         <td align="right" th:text="${board.name}">
+         </td>
+         <td align="right" th:text="${board.gender}">
+         </td>
+         <td align="right" th:text="${board.country}">
+         </td>
+         <td align="right" th:text="${board.city}">
+         </td>
+     </tr>
+ </table>
+
+</body>
+
+<script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
+<script>
+    //select
+    function loadCity(e) {
+        let korea=["서울","부산","대전","대구"];
+        let japan=["도쿄","오사카","후쿠오카","교토"];
+
+        let target = document.getElementById("city");
+
+        if(e.value == "korea") var d = korea;
+        else if(e.value == "japan") var d = japan;
+
+        target.options.length = 0;
+
+        for(x in d) {
+            let opt = document.createElement("option");
+            opt.value = d[x];
+            opt.innerHTML = d[x];
+            target.appendChild(opt);
+        }
+    }
+    //체크박스
+    function checkAll(checkAll) {
+        //getElementById는 id 속성값 하나를 가진 객체를 불러 오는것이고
+        //getElementsByName은 name이 중복이 가능해 여러개의 값을 배열의 형태로 가져오게 된다고 함
+        const checkBoxes = document.getElementsByName("checkbox");
+
+        checkBoxes.forEach((checkbox) => {
+            checkbox.checked = checkAll.checked;
+        })
+    }
+
+    //delete 요청을 해서 boardNo을 리스트 형태로 보내서 삭제 하고 싶음
+    $("#delBtn").click(function(){
+        var arr = []
+
+        $('input[name="checkbox"]:checked').each(function(i){//체크된 리스트 저장
+                arr.push($(this).val());
+            });
+
+        if(arr.length === 0){
+            console.log("this");
+            alert("삭제할 항목을 선택해 주세요");
+            return;
+        }else{
+            var objParams = {
+                "list" : arr
+            };
+                console.log(objParams);
+            $.ajax({
+                    url         :   "/board/delete",
+                    dataType    :   "json",
+                    contentType :   "application/x-www-form-urlencoded; charset=UTF-8",
+                    type        :   "post",
+                    data        :   objParams ,
+                    success     :   function(retVal){
+                         if(retVal.code == "OK") {
+                            alert(retVal.message);
+                        } else {
+                            alert(retVal.message);
+                        }
+                    },
+                    error       :   function(request, status, error){
+                        console.log("AJAX_ERROR");
+                    }
+                });
+            }
+        });
+
+
+
+</script>
+</html>

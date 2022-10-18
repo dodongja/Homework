@@ -1,4 +1,5 @@
-package com.example.demo.python;
+package com.example.demo.controller.kakao;
+
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.converter.FormHttpMessageConverter;
@@ -17,7 +18,7 @@ import java.util.List;
 @Slf4j
 @RestController
 @RequestMapping("/python-request")
-public class PythonRequester {
+public class kakao {
 
     @GetMapping("spring2python")
     public ModelAndView spring2Python(Model model) {
