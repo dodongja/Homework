@@ -1,4 +1,4 @@
-package com.example.demo.controller.test;
+/*package com.example.demo.controller.test;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -22,4 +22,4 @@ public class Cofig {
         source.registerCorsConfiguration("/**", config);
         return source;
     }
-}
+}*/

@@ -5,6 +5,7 @@ create table board(
     gender varchar(1) not null,
     country varchar(30) not null,
     city varchar(30) not null,
+    reg_date timestamp not null default now(),
     primary key(board_no)
 );
 
