@@ -8,7 +8,7 @@ import java.util.List;
 public interface BoardService {
     public List<Board> list();
     public void save(BoardRequest board);
-    public void delete(int[] board);
+    public void delete(String[] arrayParam);
     public List<Board> search(BoardRequest board);
-    //public void update(Board board);
+    public void modify(BoardRequest boardRequest);
 }

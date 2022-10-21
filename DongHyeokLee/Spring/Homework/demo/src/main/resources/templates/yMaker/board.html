@@ -85,7 +85,7 @@
          <table border="1" id="tableData" width="500">
              <thead>
              <tr>
-                 <th><input type="checkbox" value="checkAll" onclick="checkAll(this)"></th>
+                 <th><input type="checkbox" name="checkbox" value="checkAll" onclick="checkAll(this)"></th>
                  <th name="id">아이디</th>
                  <th>이름</th>
                  <th>성별</th>
@@ -123,7 +123,9 @@
                         "name" : "",
                         "gender" : gender,
                         "country" : "",
-                        "city" : ""
+                        "city" : "",
+                        "startDate" : "",
+                        "endDate" : ""
                     };
 
                  $.ajax({
@@ -140,7 +142,7 @@
 
                         $.each(data, function(i){
                             str += "<tr>";
-                            str += "<th><input type='checkbox'></th>";
+                            str += "<th><input type='checkbox' name='checkbox'></th>";
                             str += "<th name='id'>" + tblData[i].id + "</th><th name='name'>"
                                             + tblData[i].name + "</th><th name='gender'>"
                                             + tblData[i].gender + "</th><th name='country'>"
@@ -160,7 +162,7 @@
                 });
     }
     //list
-    function listBtn() {
+   /* function listBtn() {
         $.ajax({
             url : "/board/list",
             type : "get",
@@ -172,7 +174,7 @@
 
                 $.each(data, function(i){
                     str += "<tr>";
-                    str += "<th><input type='checkbox'></th>";
+                    str += "<th><input type='checkbox' name="checkbox"></th>";
                     str += "<th>" + tblData[i].id + "</th><th>"
                                     + tblData[i].name + "</th><th>"
                                     + tblData[i].gender + "</th><th>"
@@ -189,7 +191,8 @@
                    alert(error);
             }
         });
-    }
+    }*/
+
     //add
     function addRow() {
                 var table = document.getElementById('tableData');
@@ -251,6 +254,7 @@
             target.appendChild(opt);
         }
     }
+
     //체크박스
     function checkAll(checkAll) {
         //getElementById는 id 속성값 하나를 가진 객체를 불러 오는것이고
@@ -263,19 +267,19 @@
     }
 
     //delete 요청을 해서 boardNo을 리스트 형태로 보내서 삭제 하고 싶음
-    // 이클립스 , 스프링 프레임워크 , 톰캣
-    // db : 오라클 (deveploper)
     //$("#delBtn").click(function(){
     function deleteBtn() {
         var arr = []
 
-        //note pad++
-        $('input[name="checkbox"]:checked').each(function(i){//체크된 리스트 저장
-                arr.push($(this).val());
+        var checkbox = $('input[name="checkbox"]:checked');
+        checkbox.each(function(i){//체크된 리스트 저장
+                var tr = checkbox.parent().parent().eq(i);
+				var td = tr.children();
+				var no = td.eq(1).text()
+                arr.push(no);
             });
 
         if(arr.length === 0){
-            console.log("this");
             alert("삭제할 항목을 선택해 주세요");
             modalHide();
             return;
@@ -344,7 +348,7 @@
 
                         $.each(data, function(i){
                             str += "<tr>";
-                            str += "<th><input type='checkbox'></th>";
+                            str += "<th><input type='checkbox' name='checkbox'></th>";
                             str += "<th name='id'>" + tblData[i].id + "</th><th name='name'>"
                                             + tblData[i].name + "</th><th name='gender'>"
                                             + tblData[i].gender + "</th><th name='country'>"
@@ -432,11 +436,8 @@
            id = td.eq(1).text();
            name = td.eq(2).text();
            gender = td.eq(3).text();
-           console.log(gender);
            country = td.eq(4).text();
            city = td.eq(5).text();
-
-
     });
 
     /*function eventSuccess(data){

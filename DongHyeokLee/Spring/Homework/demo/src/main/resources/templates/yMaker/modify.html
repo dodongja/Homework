@@ -17,7 +17,7 @@
     <h3>수정하기</h3>
     <section id="board">
         <input type="text" placeholder="아이디" readonly/>
-        <input type="text" id="id" name="id"/>
+        <input type="text" id="id" name="id" readonly/>
         <br>
         <input type="text" placeholder="이름" readonly/>
         <input type="text" id="name" name="name"/>
@@ -41,7 +41,13 @@
         <select id="city" name="city">
             <option value="">도시</option>
         </select>
+
+        <div>
+            <button type="button" onclick="saveBtn()">저장</button>
+            <button type="button" onclick="cancelBtn()">취소</button>
+        </div>
     </section>
+
 </body>
 <script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
 <script>
@@ -55,40 +61,89 @@
               gender = window.opener.gender;
               $(":radio[name='gender'][value='" + gender +"']").attr('checked', true);
 
-              var country = window.opener.country
+              var country = window.opener.country;
               $('#country').val(country);
+               console.log("국가" + country);
 
               loadCity(country);
 
-              var city = window.opener.city
-
+              var city = window.opener.city;
               $('#city').val(city);
-              $('#city').val(city).prop('selected', true);
 
 
         });
-
+        //동적 select
         function loadCity(e) {
-        console.log("작동");
-        let korea=["서울","부산","대전","대구"];
-        let japan=["도쿄","오사카","후쿠오카","교토"];
-        let china=["상하이","광저우","산시성","베이징"];
+            console.log("e" + e);
+            let korea=["서울","부산","대전","대구"];
+            let japan=["도쿄","오사카","후쿠오카","교토"];
+            let china=["상하이","광저우","산시성","베이징"];
 
-        var target = document.getElementById("city");
+            var target = document.getElementById("city");
 
-        if(e.value == "한국") var d = korea;
-        else if(e.value == "일본") var d = japan;
-        else if(e.value == "중국") var d = china;
 
-        target.options.length = 0;
+            if(e.value == "한국" || e == "한국") var d = korea;
+            else if(e.value == "일본" || e == "일본") var d = japan;
+            else if(e.value == "중국" || e == "중국") var d = china;
 
-        for(x in d) {
-            let opt = document.createElement("option");
-            opt.value = d[x];
-            opt.innerHTML = d[x];
-            target.appendChild(opt);
-        }
-    }
+            target.options.length = 0;
+
+            for(x in d) {
+                let opt = document.createElement("option");
+                console.log(d[x]);
+                opt.value = d[x];
+                opt.innerHTML = d[x];
+                target.appendChild(opt);
+            }
+       }
+
+       //저장
+       function saveBtn() {
+                    if($('#id').val() ==""){alert("다 기입하세요"); return;}
+                    var id = $('#id').val();
+
+                    if($('#name').val() ==""){ alert("다 기입하세요"); return;}
+                    var name = $('#name').val();
+
+                    if($('input[name="gender"]:checked').val() == undefined){ alert("다 기입하세요"); return;}
+                    var gender = $('input[name="gender"]:checked').val();
+
+                    if($('#country').val() ==""){ alert("다 기입하세요"); return;}
+                    var country = $('#country').val();
+
+                    if($('#city').val() ==""){ alert("다 기입하세요"); return;}
+                    var city = $('#city').val();
+
+                var boardRequest = {
+                        "id" : id,
+                        "name" : name,
+                        "gender" : gender,
+                        "country" : country,
+                        "city" : city
+                    };
+
+            $.ajax({
+                    url         :   "/board/modify",
+                    dataType    :   "json",
+                    contentType :   "application/x-www-form-urlencoded; charset=UTF-8",
+                    data        :    boardRequest,
+                    type        :   "post",
+                    success     :    function(retVal){
+                                alert(retVal.message);
+                                console.log(retVal.status);
+                                window.close();
+                                window.opener.location.reload();
+                    },
+                    error       :    function(e){
+                                //다른 에러 났을때도 아이디 중복입니다 코드 내뱉으니깐
+                                //id값가지고 데이터베이스에서 중복이 있는지 찾는게 맞는듯
+                                //근데 id가 pk라서 id를 변경 필수로 해야함 딱히 어떻게 구별할 방법이없음
+                                //하면 할 수 있을거 같은데 pk변경이 좋은건가??
+                               console.log(e.status);
+                               //alert("아이디 중복 입니다");
+                    }
+                });
+       }
 
 
 

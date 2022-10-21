@@ -27,7 +27,7 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Override
-    public void delete(int[] board) {
+    public void delete(String[] board) {
         repository.delete(board);
     }
 
@@ -36,19 +36,8 @@ public class BoardServiceImpl implements BoardService {
         return repository.search(board);
     }
 
-   /* @Override
-    public void update(Board board) {
-        int boardNo = board.getBoardNo();
-        Board b = repository.findById(boardNo);
-        log.info("findByID" + b.toString());
-        //일단 이래 짜놓긴 했는데 ajax랑 html에서 데이터 주고받는거 좀 더 공부해야할듯
-        if(!board.getName().equals("")) b.setName(board.getName());
-        if(!board.getId().equals("")) b.setId(board.getId());
-        if(board.getGender()!=null) b.setGender(board.getGender());
-        if(!board.getCountry().equals("")) b.setCountry(board.getCountry());
-        if(!board.getCity().equals("")) b.setCity(board.getCity());
-
-        log.info(b.toString());
-        repository.update(b);
-    }*/
+    @Override
+    public void modify(BoardRequest board) {
+        repository.modify(board);
+    }
 }

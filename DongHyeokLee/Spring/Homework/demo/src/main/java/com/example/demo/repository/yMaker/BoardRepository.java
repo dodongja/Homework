@@ -54,9 +54,9 @@ public class BoardRepository {
         return results;
     }
 
-    public void delete(int[] board) {
-        for(int b : board) {
-            String query = "delete from board where board_no = ?";
+    public void delete(String[] board) {
+        for(String b : board) {
+            String query = "delete from board where id = ?";
 
             jdbcTemplate.update(query, b);
         }
@@ -134,15 +134,16 @@ public class BoardRepository {
         return results;
     }
 
-    /*public void update(Board board) {
+    public void modify(BoardRequest board) {
         log.info("Repository update: " + board);
 
-        String query = "update board set id = ?, name = ?, " +
-                "gender = ?, country = ?, city = ? where board_no = ?";
+        String query = "update board set name = ?, " +
+                "gender = ?, country = ?, city = ? where id = ?";
 
-        jdbcTemplate.update(query, board.getId(), board.getName(),
-                board.getGender(), board.getCountry(), board.getCity(), board.getBoardNo());
-    }*/
+        jdbcTemplate.update(query,board.getName(),board.getGender(),
+                board.getCountry(), board.getCity(),board.getId());
+    }
+
 
     public Board findById(int boardNo) {
         List<Board> results = jdbcTemplate.query(

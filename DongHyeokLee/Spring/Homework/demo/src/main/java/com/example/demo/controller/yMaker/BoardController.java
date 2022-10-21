@@ -61,13 +61,7 @@ public class BoardController {
             log.info("delete");
             String[] arrayParam = request.getParameterValues("list");
 
-            int[] list = new int[arrayParam.length];
-
-            for (int i = 0; i < arrayParam.length; i++) {
-                list[i] = Integer.parseInt(arrayParam[i]);
-            }
-
-            boardService.delete(list);
+            boardService.delete(arrayParam);
 
 
         Map<String, Object> retVal = new HashMap<String, Object>();
@@ -91,11 +85,18 @@ public class BoardController {
     //@ResponseBody
     @ResponseBody
     @PostMapping("/modify")
-    public Object modify(HttpServletRequest httpServletRequest, Model model, HttpServletResponse httpServletResponse){
+    public Object modify(BoardRequest boardRequest, Model model){
         log.info("modify");
 
+        boardService.modify(boardRequest);
 
-        return "yMaker/modify";
+        Map<String, Object> retVal = new HashMap<String, Object>();
+
+        //성공했다고 처리
+        retVal.put("code", "OK");
+        retVal.put("message", "저장 되었습니다.");
+
+        return retVal;
     }
 
 
