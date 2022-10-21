@@ -36,7 +36,7 @@ public class BoardServiceImpl implements BoardService {
         return repository.search(board);
     }
 
-    @Override
+   /* @Override
     public void update(Board board) {
         int boardNo = board.getBoardNo();
         Board b = repository.findById(boardNo);
@@ -50,5 +50,5 @@ public class BoardServiceImpl implements BoardService {
 
         log.info(b.toString());
         repository.update(b);
-    }
+    }*/
 }

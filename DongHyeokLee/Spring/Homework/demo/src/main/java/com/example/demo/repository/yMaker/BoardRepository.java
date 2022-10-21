@@ -11,8 +11,7 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.LocalDate;
-import java.util.Date;
+import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -31,9 +30,9 @@ public class BoardRepository {
     }
 
     public List<Board> list() {
+        log.info("this");
         List<Board> results = jdbcTemplate.query(
-                "select * from board " +
-                        "where board_no > 0 order by board_no desc",
+                "select * from board ",
 
                 new RowMapper<Board>() {
                     @SneakyThrows
@@ -41,7 +40,6 @@ public class BoardRepository {
                     public Board mapRow(ResultSet rs, int rowNum) throws SQLException {
                         Board board = new Board();
 
-                        board.setBoardNo(rs.getInt("board_no"));
                         board.setId(rs.getString("id"));
                         board.setName(rs.getString("name"));
                         board.setGender(rs.getString("gender"));
@@ -52,7 +50,7 @@ public class BoardRepository {
                     }
                 }
         );
-
+        log.info(results.toString());
         return results;
     }
 
@@ -63,23 +61,54 @@ public class BoardRepository {
             jdbcTemplate.update(query, b);
         }
     }
-
+    //동적 쿼리? 정적 쿼리?
+    // IF , CHOOSE
+    // Xml
+    //Map<String, String>
     public List<Board> search(BoardRequest board){
-        String query;
-             query = "select * from board where id = ? " +
-                    "or name = ? " + "or gender = ? " +
-                    "or country = ? " + "or city = ? " +
-                    "or (reg_date >= ? " + "and reg_date < ?)";
+        StringBuilder querySQL = new StringBuilder("select * from board where 1=1 ");
+        List<String> queryArgs = new ArrayList<>();
 
-        String id = board.getId();
-        String name = board.getName();
-        String gender = board.getGender();
-        String country = board.getCountry();
-        String city = board.getCity();
-        String startDate = board.getStartDate();
-        String endDate =  board.getEndDate();
-        log.info("start" + startDate);
-        log.info("end" +endDate);
+        if(!board.getName().equals("")){
+            querySQL.append("and name = ? ");
+            queryArgs.add(board.getName());
+        }
+        if(!board.getId().equals("")){
+            querySQL.append("and id = ? ");
+            queryArgs.add(board.getId());
+        }
+        if(board.getGender()!=null){
+            querySQL.append("and gender = ? ");
+            queryArgs.add(board.getGender());
+        }
+        if(!board.getCountry().equals("")){
+            querySQL.append("and country = ? ");
+            queryArgs.add(board.getCountry());
+        }
+        if(!board.getCity().equals("")){
+            querySQL.append("and city = ? ") ;
+            queryArgs.add(board.getCity());
+        }
+        log.info(board.getStartDate());
+        if(!board.getStartDate().equals("")){
+            querySQL.append("and reg_date >= ? ") ;
+            queryArgs.add(board.getStartDate());
+        }
+
+        if(!board.getStartDate().equals("")){
+            querySQL.append("and reg_date < ?") ;
+            queryArgs.add(board.getEndDate());
+        }
+
+
+
+        log.info(querySQL.toString());
+        log.info("arr" + queryArgs.toArray());
+
+        String query;
+             query = querySQL.toString();
+
+
 
         List<Board> results = jdbcTemplate.query(query,
 
@@ -89,7 +118,6 @@ public class BoardRepository {
                     public Board mapRow(ResultSet rs, int rowNum) throws SQLException {
                         Board user = new Board();
 
-                        user.setBoardNo(rs.getInt("board_no"));
                         user.setId(rs.getString("id"));
                         user.setName(rs.getString("name"));
                         user.setGender(rs.getString("gender"));
@@ -100,13 +128,13 @@ public class BoardRepository {
                     }
                 },
 
-                id,name,gender,country,city, startDate, endDate
+                queryArgs.toArray()
         );
         log.info("results" + results);
         return results;
     }
 
-    public void update(Board board) {
+    /*public void update(Board board) {
         log.info("Repository update: " + board);
 
         String query = "update board set id = ?, name = ?, " +
@@ -114,7 +142,7 @@ public class BoardRepository {
 
         jdbcTemplate.update(query, board.getId(), board.getName(),
                 board.getGender(), board.getCountry(), board.getCity(), board.getBoardNo());
-    }
+    }*/
 
     public Board findById(int boardNo) {
         List<Board> results = jdbcTemplate.query(
@@ -127,7 +155,6 @@ public class BoardRepository {
                     public Board mapRow(ResultSet rs, int rowNum) throws SQLException {
                         Board board = new Board();
 
-                        board.setBoardNo(rs.getInt("board_no"));
                         board.setId(rs.getString("id"));
                         board.setName(rs.getString("name"));
                         board.setGender(rs.getString("gender"));
@@ -141,6 +168,21 @@ public class BoardRepository {
         );
 
         return results.get(0);
+    }
+
+    public String searchSQL(BoardRequest board) {
+         StringBuilder query = new StringBuilder("select * from board where");
+
+        if(!board.getName().equals("")) query.append(" name = ? ") ;
+        if(!board.getId().equals("")) query.append("and id = ? ") ;
+        if(board.getGender()!=null) query.append("and gender = ? ") ;
+        if(!board.getCountry().equals("")) query.append("and country = ? ") ;
+        if(!board.getCity().equals("")) query.append("and city = ?") ;
+
+        log.info(query.toString());
+
+        return query.toString();
+
     }
 
 }

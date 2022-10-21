@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <style>
+        section {
+            width: 500px;             /* 너비 값 */
+            height: 500px;
+            padding: 15px;            /* 테두리와 내용물 사이의 여백 */
+            border: 5px solid gray;   /* 테두리 회색 실선 두께 - 5픽셀 */
+        }
+    </style>
+    <title>Title</title>
+
+</head>
+<body>
+    <h3>수정하기</h3>
+    <section id="board">
+        <input type="text" placeholder="아이디" readonly/>
+        <input type="text" id="id" name="id"/>
+        <br>
+        <input type="text" placeholder="이름" readonly/>
+        <input type="text" id="name" name="name"/>
+        <br>
+        <input type="text" placeholder="성별" readonly/>
+        <input type="radio" id="male" name="gender" value="남">
+        <label for="male">남</label>
+        <input type="radio" id="female" name="gender" value="여">
+        <label for="female">여</label>
+
+        <br>
+        <input type="text" placeholder="국가" readonly/>
+        <select id="country" name="country" onchange="loadCity(this)">
+            <option value="">국가</option>
+            <option value="한국">한국</option>
+            <option value="일본">일본</option>
+            <option value="중국">중국</option>
+        </select>
+        <br>
+        <input type="text" placeholder="도시" readonly/>
+        <select id="city" name="city">
+            <option value="">도시</option>
+        </select>
+    </section>
+</body>
+<script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
+<script>
+        $(document).ready(function(){
+
+              $('#id').val(window.opener.id);
+
+              $('#name').val(window.opener.name);
+
+              var gender = document.getElementsByName('gender')[0].value
+              gender = window.opener.gender;
+              $(":radio[name='gender'][value='" + gender +"']").attr('checked', true);
+
+              var country = window.opener.country
+              $('#country').val(country);
+
+              loadCity(country);
+
+              var city = window.opener.city
+
+              $('#city').val(city);
+              $('#city').val(city).prop('selected', true);
+
+
+        });
+
+        function loadCity(e) {
+        console.log("작동");
+        let korea=["서울","부산","대전","대구"];
+        let japan=["도쿄","오사카","후쿠오카","교토"];
+        let china=["상하이","광저우","산시성","베이징"];
+
+        var target = document.getElementById("city");
+
+        if(e.value == "한국") var d = korea;
+        else if(e.value == "일본") var d = japan;
+        else if(e.value == "중국") var d = china;
+
+        target.options.length = 0;
+
+        for(x in d) {
+            let opt = document.createElement("option");
+            opt.value = d[x];
+            opt.innerHTML = d[x];
+            target.appendChild(opt);
+        }
+    }
+
+
+
+</script>
+</html>

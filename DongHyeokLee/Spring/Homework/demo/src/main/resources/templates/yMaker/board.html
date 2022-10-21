@@ -1,125 +1,48 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
+    <link rel="stylesheet" href="/yMaker/board.css">
     <!--modal -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css">
     <!-- datepicker-->
     <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 
     <title>yMaker</title>
-    <style>
-        input {
-         text-align: center;
-        }
-        input::placeholder {
-          color: black;
-        }
-        .wrapper {
-          display: flex;
-          justify-content: center;
-          align-items:center;
-          margin-top : 20px;
-        }
-        .wrapper2 {
-          display: flex;
-          justify-content: center;
-          align-items:center;
-        }
-
-        table {
-            width: 45%;
-            border: 2px solid gray;
-        }
-
-        #tableData {
-          text-align: center;
-        }
-
-        form {
-            width : 45%;
-        }
-
-        .btn {
-            margin-bottom : 10px;
-        }
-
-        #id {
-            margin-right : 18px;
-            margin-bottom : 15px;
-            width : 150px;
-            height : 30px;
-        }
-
-        #name {
-            margin-right : 200px;
-            margin-bottom : 15px;
-            width : 150px;
-            height : 30px;
-        }
-
-        #country {
-            margin-right : 18px;
-            width : 150px;
-            height : 30px;
-        }
-
-        #city {
-            margin-right : 18px;
-            width : 150px;
-            height : 30px;
-        }
-
-        #startDate {
-            margin-right : 10px;
-            width : 150px;
-            height : 30px;
-        }
-
-        #endDate {
-            width : 150px;
-            height : 30px;
-        }
-
-       .btn {
-            margin-left : 400px;
-       }
-
-    </style>
 </head>
 
 <body>
     <div class="wrapper">
     <!--  -->
-    <form id="boardRequest" th:object="${boardRequest}">
+
          <h3>Grid그리드</h3>
          <table border="1" class="table" width="500" height="100">
             <tr>
                 <td>
-                    <input type="text" id="id" name="id" th:field="*{id}" placeholder="아이디"/>
-                    <input type="text" id="name" name="name" th:field="*{name}" placeholder="이름"/>
+                    <input type="text" id="id" name="id"  placeholder="아이디"/>
+                    <input type="text" id="name" name="name"  placeholder="이름"/>
 
-                    <input type="radio" id="male" name="gender" value="남" th:field="*{gender}">
+                    <input type="radio" id="male" name="gender" value="남" onclick="searchGender(male.value)">
                     <label for="male">남</label>
-                    <input type="radio" id="female" name="gender" value="여" th:field="*{gender}">
+                    <input type="radio" id="female" name="gender" value="여" onclick="searchGender(female.value)" >
                     <label for="female">여</label>
 
                     <br>
 
-                    <select id="country" name="country" onchange="loadCity(this)" th:field="*{country}">
+                    <select id="country" name="country" onchange="loadCity(this)" >
                         <option value="">국가</option>
                         <option value="한국">한국</option>
                         <option value="일본">일본</option>
                         <option value="중국">중국</option>
                     </select>
 
-                    <select id="city" name="city" th:field="*{city}">
+                    <select id="city" name="city" >
                         <option value="">도시</option>
                     </select>
 
                     <!-- datepicker-->
-                    <input type="text" id="startDate" th:field="*{startDate}" autocomplete='off'/>
-                    <input type="text" id="endDate" th:field="*{endDate}"autocomplete='off'/>
+                    <input type="text" id="startDate"  autocomplete='off'/>
+                    <input type="text" id="endDate" autocomplete='off'/>
 
 
                 </td>
@@ -128,11 +51,12 @@
         <!-- button -->
          <div class="btn">
              <button type="submit" id="btnSearch" onclick="searchBtn()">조회</button>
+             <button type="submit" id="btnAddRow" onclick="addRow()">추가</button>
              <button type="submit" id="btnSave" onclick="updateBtn()">저장</button>
              <button type="button" id="excelDownload" class="download">엑셀다운</button>
              <button type="button" data-toggle="modal" data-target="#modal">삭제</button>
          </div>
-         </form>
+
 
         <!--modal-->
          <div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -159,36 +83,18 @@
          <!-- list -->
     <div class="wrapper2">
          <table border="1" id="tableData" width="500">
+             <thead>
              <tr>
-                 <th width="30" align="center"><input type="checkbox" value="checkAll" onclick="checkAll(this)"></th>
-                 <th align="center" width="100">아이디</th>
-                 <th align="center" width="100">이름</th>
-                 <th align="center" width="100">성별</th>
-                 <th align="center" width="100">국가</th>
-                 <th align="center" width="100">도시</th>
+                 <th><input type="checkbox" value="checkAll" onclick="checkAll(this)"></th>
+                 <th name="id">아이디</th>
+                 <th>이름</th>
+                 <th>성별</th>
+                 <th>국가</th>
+                 <th>도시</th>
              </tr>
-
-             <tr th:if="${#lists.isEmpty(list)}">
-                 <td colspan="6">
-                     현재 등록된 정보가 없습니다!
-                 </td>
-             </tr>
-
-             <tr th:each="board : ${list}">
-                 <td>
-                     <input type="checkbox" name="checkbox" th:value="${board.boardNo}">
-                 </td>
-                 <td align="center" th:text="${board.id}">
-                 </td>
-                 <td align="center" th:text="${board.name}">
-                 </td>
-                 <td align="center" th:text="${board.gender}">
-                 </td>
-                 <td align="center" th:text="${board.country}">
-                 </td>
-                 <td align="center" th:text="${board.city}">
-                 </td>
-             </tr>
+             </thead>
+             <tbody id="body">
+             </tbody>
          </table>
     </div>
 </body>
@@ -209,13 +115,128 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/1.3.8/FileSaver.min.js"></script>
 
 <script>
+    //searchGender
+    function searchGender(e){
+        var gender = e;
+        var boardRequest = {
+                        "id" : "",
+                        "name" : "",
+                        "gender" : gender,
+                        "country" : "",
+                        "city" : ""
+                    };
+
+                 $.ajax({
+                    url         :   "/board/search",
+                    dataType    :   "json",
+                    contentType :   "application/x-www-form-urlencoded; charset=UTF-8",
+                    data        :    boardRequest,
+                    type        :   "post",
+                    success : function(data) {
+                        console.log(data);
+                        $("#body").empty();
+                        var tblData = data;
+                        var str = "";
+
+                        $.each(data, function(i){
+                            str += "<tr>";
+                            str += "<th><input type='checkbox'></th>";
+                            str += "<th name='id'>" + tblData[i].id + "</th><th name='name'>"
+                                            + tblData[i].name + "</th><th name='gender'>"
+                                            + tblData[i].gender + "</th><th name='country'>"
+                                            + tblData[i].country + "</th><th name='city'>"
+                                            + tblData[i].city + "</th>";
+                            str += "</tr>";
+                        });
+
+                        console.log(str);
+                        $("#tableData").append(str);
+
+                    },
+                    error       :    function(e){
+                               console.log(e.status);
+
+                    }
+                });
+    }
+    //list
+    function listBtn() {
+        $.ajax({
+            url : "/board/list",
+            type : "get",
+            dataType: "json",
+            success : function(data) {
+                console.log(data);
+                var tblData = data;
+                var str = "";
+
+                $.each(data, function(i){
+                    str += "<tr>";
+                    str += "<th><input type='checkbox'></th>";
+                    str += "<th>" + tblData[i].id + "</th><th>"
+                                    + tblData[i].name + "</th><th>"
+                                    + tblData[i].gender + "</th><th>"
+                                    + tblData[i].country + "</th><th>"
+                                    + tblData[i].city + "</th>";
+                    str += "</tr>";
+                });
+
+                console.log(str);
+                $("#tableData").append(str);
+
+            },
+            error : function(xhr, status, error) {
+                   alert(error);
+            }
+        });
+    }
+    //add
+    function addRow() {
+                var table = document.getElementById('tableData');
+                var row = table.insertRow();
+
+                var checkBox = row.insertCell(0);
+                var id = row.insertCell(1);
+                var name = row.insertCell(2);
+                var gender = row.insertCell(3);
+                var country = row.insertCell(4);
+                var city = row.insertCell(5);
+
+                checkBox.innerHTML = "<input type='checkbox' name='checkbox'>";
+
+                id.innerHTML= "<input type='text' id='id2' name='id'  placeholder='아이디'/>";
+
+                name.innerHTML = "<input type='text' id='name2' name='name' placeholder='이름'/></td>";
+
+                gender.innerHTML = "<input type='radio' id='male' name='gender2' value='남'>"
+                   +  "<label for='male'>남</label>"
+                   +  "<input type='radio' id='female' name='gender2' value='여'>"
+                   +  "<label for='female'>여</label>";
+
+                country.innerHTML = "<select id='country2' name='country' onchange='loadCity(this)'>"
+                   +  "<option value=''>국가</option>"
+                   +  "<option value='한국'>한국</option>"
+                   +  "<option value='일본'>일본</option>"
+                   +  "<option value='중국'>중국</option>"
+                   +  "</select>";
+
+                city.innerHTML = "<select id='city2' name='city'>"
+                   +  "<option value=''>도시</option>"
+                   +  "</select>"
+    }
+
     //combo box
     function loadCity(e) {
+
         let korea=["서울","부산","대전","대구"];
         let japan=["도쿄","오사카","후쿠오카","교토"];
         let china=["상하이","광저우","산시성","베이징"];
 
-        let target = document.getElementById("city");
+        if(e.id == "country"){
+        var target = document.getElementById("city");
+        }else{
+        var target = document.getElementById("city2");
+        }
 
         if(e.value == "한국") var d = korea;
         else if(e.value == "일본") var d = japan;
@@ -242,10 +263,13 @@
     }
 
     //delete 요청을 해서 boardNo을 리스트 형태로 보내서 삭제 하고 싶음
+    // 이클립스 , 스프링 프레임워크 , 톰캣
+    // db : 오라클 (deveploper)
     //$("#delBtn").click(function(){
     function deleteBtn() {
         var arr = []
 
+        //note pad++
         $('input[name="checkbox"]:checked').each(function(i){//체크된 리스트 저장
                 arr.push($(this).val());
             });
@@ -288,39 +312,77 @@
 
         //조회
         function searchBtn(){
-            var formObj = $("#boardRequest");
+                var id = $('#id').val();
+                var name = $('#name').val();
+                var gender = $('input[name="gender2"]:checked').val();
+                var country = $('#country').val();
+                var city = $('#city').val();
+                var startDate = $('#startDate').val();
+                var endDate = $('#endDate').val();
 
-            formObj.attr("action", "/board/search");
-            formObj.attr("method", "post");
-            formObj.submit();
+                var boardRequest = {
+                        "id" : id,
+                        "name" : name,
+                        "gender" : gender,
+                        "country" : country,
+                        "city" : city,
+                        "startDate" : startDate,
+                        "endDate" : endDate
+                    };
+
+                 $.ajax({
+                    url         :   "/board/search",
+                    dataType    :   "json",
+                    contentType :   "application/x-www-form-urlencoded; charset=UTF-8",
+                    data        :    boardRequest,
+                    type        :   "post",
+                    success : function(data) {
+                        console.log(data);
+                        $("#body").empty();
+                        var tblData = data;
+                        var str = "";
+
+                        $.each(data, function(i){
+                            str += "<tr>";
+                            str += "<th><input type='checkbox'></th>";
+                            str += "<th name='id'>" + tblData[i].id + "</th><th name='name'>"
+                                            + tblData[i].name + "</th><th name='gender'>"
+                                            + tblData[i].gender + "</th><th name='country'>"
+                                            + tblData[i].country + "</th><th name='city'>"
+                                            + tblData[i].city + "</th>";
+                            str += "</tr>";
+                        });
+
+                        console.log(str);
+                        $("#tableData").append(str);
+
+                    },
+                    error       :    function(e){
+                               console.log(e.status);
+
+                    }
+                });
         }
 
-        //update
+        //저장
        function updateBtn() {
-                var formObj = $("#boardRequest");
+                    if($('#id2').val() ==""){alert("다 기입하세요"); return;}
+                    var id = $('#id2').val();
 
-                var arr = []
+                    if($('#name2').val() ==""){ alert("다 기입하세요"); return;}
+                    var name = $('#name2').val();
 
-                $('input[name="checkbox"]:checked').each(function(i){//체크된 리스트 저장
-                    arr.push($(this).val());
-                });
-                //체크 안했을 땐 그냥 데이터 저장
-                if(arr.length === 0){
-                    formObj.attr("action", "/board/save");
-                    formObj.attr("method", "post");
-                    formObj.submit();
 
-                //체크 했을 땐 수정 버튼
-                }else if(arr.length === 1){
-                    var boardNo = arr[0];
-                    var id = $('#id').val();
-                    var name = $('#name').val();
-                    var gender = $('input[name="gender"]:checked').val();
-                    var country = $('#country').val();
-                    var city = $('#city').val();
+                    if($('input[name="gender2"]:checked').val() == undefined){ alert("다 기입하세요"); return;}
+                    var gender = $('input[name="gender2"]:checked').val();
 
-                    var board = {
-                        "boardNo" : boardNo,
+                    if($('#country2').val() ==""){ alert("다 기입하세요"); return;}
+                    var country = $('#country2').val();
+
+                    if($('#city2').val() ==""){ alert("다 기입하세요"); return;}
+                    var city = $('#city2').val();
+
+                    var boardRequest = {
                         "id" : id,
                         "name" : name,
                         "gender" : gender,
@@ -329,30 +391,66 @@
                     };
 
                  $.ajax({
-                    url         :   "/board/modify",
+                    url         :   "/board/save",
                     dataType    :   "json",
                     contentType :   "application/x-www-form-urlencoded; charset=UTF-8",
+                    data        :    boardRequest,
                     type        :   "post",
-                    traditional :    true,
-                    async       :    false,
-                    data        :    board,
                     success     :    function(retVal){
-                               console.log(retVal.code);
-                               alert(retVal.message);
-                               window.location.href="/board/list"
+                                alert(retVal.message);
+                                console.log(retVal.status);
+                                location.reload();
                     },
                     error       :    function(e){
                                console.log(e.status);
+                               alert("아이디 중복 입니다");
                     }
                 });
-
-                //여러개 체크했을 때
-                }else{
-                    console.log(arr[0]);
-                    alert("여러개를 수정 할 수 없습니다");
-
-                }
            }
+
+       //수정
+        var openWin;
+        var id;
+        var name;
+        var gender;
+        var country;
+        var city;
+    $("#tableData tbody").on('dblclick','tr',function(){
+
+        var title = "pop";
+        openWin = window.open("modify",title, "width=570, height=350, resizable = no, scrollbars = no");
+
+        var tdArr = new Array();
+
+        var tr = $(this);
+        var td = tr.children();
+
+        td.each(function(i){
+            tdArr.push(td.eq(i).text());
+            });
+
+           id = td.eq(1).text();
+           name = td.eq(2).text();
+           gender = td.eq(3).text();
+           console.log(gender);
+           country = td.eq(4).text();
+           city = td.eq(5).text();
+
+
+    });
+
+    /*function eventSuccess(data){
+    openWin.location.href = "/board/modify";
+    }
+
+        function sendRow(a) {
+            openWin.document.getElementById("id").value = a;
+        }*/
+
+
+
+
+
 
 
 

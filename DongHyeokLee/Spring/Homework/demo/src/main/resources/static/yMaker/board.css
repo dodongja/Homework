@@ -1,0 +1,75 @@
+input {
+ text-align: center;
+}
+input::placeholder {
+  color: black;
+}
+.wrapper {
+  display: flex;
+  justify-content: center;
+  align-items:center;
+  margin-top : 20px;
+}
+.wrapper2 {
+  display: flex;
+  justify-content: center;
+  align-items:center;
+}
+
+table {
+    width: 45%;
+    border: 2px solid gray;
+}
+
+#tableData {
+  text-align: center;
+}
+
+form {
+    width : 45%;
+}
+
+.btn {
+    margin-bottom : 10px;
+}
+
+#id {
+    margin-right : 18px;
+    margin-bottom : 15px;
+    width : 150px;
+    height : 30px;
+}
+
+#name {
+    margin-right : 200px;
+    margin-bottom : 15px;
+    width : 150px;
+    height : 30px;
+}
+
+#country {
+    margin-right : 18px;
+    width : 150px;
+    height : 30px;
+}
+
+#city {
+    margin-right : 18px;
+    width : 150px;
+    height : 30px;
+}
+
+#startDate {
+    margin-right : 10px;
+    width : 150px;
+    height : 30px;
+}
+
+#endDate {
+    width : 150px;
+    height : 30px;
+}
+
+.btn {
+    margin-left : 400px;
+}

@@ -7,7 +7,6 @@ import java.util.Date;
 
 @Data
 public class BoardRequest {
-    private int boardNo;
     private String id;
     private String name;
     private String gender;

@@ -10,5 +10,5 @@ public interface BoardService {
     public void save(BoardRequest board);
     public void delete(int[] board);
     public List<Board> search(BoardRequest board);
-    public void update(Board board);
+    //public void update(Board board);
 }
