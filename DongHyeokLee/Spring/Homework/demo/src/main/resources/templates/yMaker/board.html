@@ -12,11 +12,11 @@
 </head>
 
 <body>
+    <section>
+        <h3>Grid그리드</h3>
     <div class="wrapper">
     <!--  -->
-
-         <h3>Grid그리드</h3>
-         <table border="1" class="table" width="500" height="100">
+         <table border="1" class="table">
             <tr>
                 <td>
                     <input type="text" id="id" name="id"  placeholder="아이디"/>
@@ -43,20 +43,20 @@
                     <!-- datepicker-->
                     <input type="text" id="startDate"  autocomplete='off'/>
                     <input type="text" id="endDate" autocomplete='off'/>
-
-
                 </td>
             </tr>
          </table>
+    </div>
+
         <!-- button -->
+
          <div class="btn">
              <button type="submit" id="btnSearch" onclick="searchBtn()">조회</button>
              <button type="submit" id="btnAddRow" onclick="addRow()">추가</button>
              <button type="submit" id="btnSave" onclick="updateBtn()">저장</button>
              <button type="button" id="excelDownload" class="download">엑셀다운</button>
-             <button type="button" data-toggle="modal" data-target="#modal">삭제</button>
+             <button type="button" id="btnDel" data-toggle="modal" data-target="#modal">삭제</button>
          </div>
-
 
         <!--modal-->
          <div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -72,31 +72,32 @@
                          게시물을 정말 삭제하시겠습니까?
                      </div>
                      <div class="modal-footer">
-                         <button type="button" class="btn btn-primary" id="delBtn" onclick="deleteBtn()">삭제</button>
-                         <button type="button" class="btn btn-secondary" data-dismiss="modal" id="cancel">취소</button>
+                         <button type="button" class="btn btn-primary" id="delCheckBtn" onclick="deleteBtn()">삭제</button>
+                         <button type="button" class="btn btn-secondary" data-dismiss="modal" id="cancelBtn">취소</button>
                      </div>
                  </div>
              </div>
          </div>
-         </div>
-    </div>
+     </div>
+
          <!-- list -->
     <div class="wrapper2">
          <table border="1" id="tableData" width="500">
              <thead>
              <tr>
-                 <th><input type="checkbox" name="checkbox" value="checkAll" onclick="checkAll(this)"></th>
-                 <th name="id">아이디</th>
-                 <th>이름</th>
-                 <th>성별</th>
-                 <th>국가</th>
-                 <th>도시</th>
+                 <th><input width="50" type="checkbox" name="checkbox" value="checkAll" onclick="checkAll(this)"></th>
+                 <th name="id" width="200">아이디</th>
+                 <th width="200">이름</th>
+                 <th width="80">성별</th>
+                 <th width="150">국가</th>
+                 <th width="150">도시</th>
              </tr>
              </thead>
              <tbody id="body">
              </tbody>
          </table>
     </div>
+    </section>
 </body>
 
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
@@ -412,6 +413,7 @@
                 });
            }
 
+
        //수정
         var openWin;
         var id;
@@ -439,22 +441,6 @@
            country = td.eq(4).text();
            city = td.eq(5).text();
     });
-
-    /*function eventSuccess(data){
-    openWin.location.href = "/board/modify";
-    }
-
-        function sendRow(a) {
-            openWin.document.getElementById("id").value = a;
-        }*/
-
-
-
-
-
-
-
-
 
        //datepicker
        $(document).ready(function () {
