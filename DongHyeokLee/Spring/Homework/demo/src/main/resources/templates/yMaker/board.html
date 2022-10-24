@@ -28,8 +28,43 @@
                     <label for="female">여</label>
 
                     <br>
+                    <!-- 국가 -->
+                        <div class="countryMultiselect">
+                            <div class="countryBox" onclick="showCheckboxes('countryCheckBox')">
+                                <select>
+                                    <option>국가</option>
+                                </select>
+                                <div class="countrySelect"></div>
+                            </div>
+                            <div id="countryCheckBox">
+                                <label for="한국">
+                                    <input type="checkbox" name="checkbox" id="한국" value="한국"
+                                           onclick="loadCity(this);checkOnlyOne(this);"/>한국</label>
+                                <label for="일본">
+                                    <input type="checkbox" name="checkbox" id="일본" value="일본"
+                                           onclick="loadCity(this);checkOnlyOne(this);"/>일본</label>
+                                <label for="중국">
+                                    <input type="checkbox" name="checkbox" id="중국" value="중국"
+                                           onclick="loadCity(this);checkOnlyOne(this);"/>중국</label>
+                            </div>
+                        </div>
 
-                    <select id="country" name="country" onchange="loadCity(this)" >
+                    <!-- 도시 -->
+                        <div class="cityMultiselect">
+                            <div class="cityBox" onclick="showCheckboxes('cityCheckBox')">
+                                <select>
+                                    <option>도시</option>
+                                </select>
+                                <div class="citySelect"></div>
+                            </div>
+                            <div id="cityCheckBox">
+                            </div>
+                        </div>
+
+
+
+
+                  <!--  <select id="country" name="country" onchange="loadCity(this)" >
                         <option value="">국가</option>
                         <option value="한국">한국</option>
                         <option value="일본">일본</option>
@@ -38,7 +73,7 @@
 
                     <select id="city" name="city" >
                         <option value="">도시</option>
-                    </select>
+                    </select> -->
 
                     <!-- datepicker-->
                     <input type="text" id="startDate"  autocomplete='off'/>
@@ -81,13 +116,13 @@
      </div>
 
          <!-- list -->
-    <div class="wrapper2">
-         <table border="1" id="tableData" width="500">
+    <div class="data-wrapper">
+         <table border="1" id="tableData">
              <thead>
              <tr>
-                 <th><input width="50" type="checkbox" name="checkbox" value="checkAll" onclick="checkAll(this)"></th>
-                 <th name="id" width="200">아이디</th>
-                 <th width="200">이름</th>
+                 <th width="30"><input type="checkbox" name="dataCheckbox" value="checkAll" onclick="checkAll(this)"></th>
+                 <th name="id" width="150">아이디</th>
+                 <th width="150">이름</th>
                  <th width="80">성별</th>
                  <th width="150">국가</th>
                  <th width="150">도시</th>
@@ -143,7 +178,7 @@
 
                         $.each(data, function(i){
                             str += "<tr>";
-                            str += "<th><input type='checkbox' name='checkbox'></th>";
+                            str += "<th><input type='checkbox' name='dataCheckbox'></th>";
                             str += "<th name='id'>" + tblData[i].id + "</th><th name='name'>"
                                             + tblData[i].name + "</th><th name='gender'>"
                                             + tblData[i].gender + "</th><th name='country'>"
@@ -184,7 +219,7 @@
                     str += "</tr>";
                 });
 
-                console.log(str);
+
                 $("#tableData").append(str);
 
             },
@@ -212,12 +247,12 @@
 
                 name.innerHTML = "<input type='text' id='name2' name='name' placeholder='이름'/></td>";
 
-                gender.innerHTML = "<input type='radio' id='male' name='gender2' value='남'>"
-                   +  "<label for='male'>남</label>"
-                   +  "<input type='radio' id='female' name='gender2' value='여'>"
-                   +  "<label for='female'>여</label>";
+                gender.innerHTML = "<input type='radio' id='남자' name='gender2' value='남'>"
+                   +  "<label for='남자'>남</label>"
+                   +  "<input type='radio' id='여자' name='gender2' value='여'>"
+                   +  "<label for='여자'>여</label>";
 
-                country.innerHTML = "<select id='country2' name='country' onchange='loadCity(this)'>"
+                /*country.innerHTML = "<select id='country2' name='country' onchange='loadCity(this)'>"
                    +  "<option value=''>국가</option>"
                    +  "<option value='한국'>한국</option>"
                    +  "<option value='일본'>일본</option>"
@@ -226,10 +261,49 @@
 
                 city.innerHTML = "<select id='city2' name='city'>"
                    +  "<option value=''>도시</option>"
-                   +  "</select>"
+                   +  "</select>"*/
+
+                country.innerHTML =
+                        "<form>" +
+                            "<div class='addCountryMultiselect'>" +
+                                "<div class='addCountryBox' onclick=\"showCheckboxes('addCountryCheckBox')\">" +
+                                    "<select>" +
+                                        "<option>국가</option>" +
+                                "</select>" +
+                                "<div class='addCountrySelect'></div>" +
+                            "</div>" +
+                            "<div id='addCountryCheckBox'>" +
+                                "<label for='korea'>" +
+                                    "<input type='checkbox' name='addCheckbox' id='korea' value='한국' " +
+                                           "onclick='loadCity(this);checkOnlyOne(this);'/>한국</label>" +
+                                "<label for='japan'>" +
+                                    "<input type='checkbox' name='addCheckbox' id='japan' value='일본' " +
+                                           "onclick='loadCity(this);checkOnlyOne(this);'/>일본</label>" +
+                                "<label for='china'>" +
+                                    "<input type='checkbox' name='addCheckbox' id='china' value='중국' " +
+                                           "onclick='loadCity(this);checkOnlyOne(this);'/>중국</label>" +
+                            "</div>" +
+                        "</div>" +
+                    "</form>";
+
+                city.innerHTML =
+                        "<form>" +
+                        "<div class='addCityMultiselect'>" +
+                            "<div class='addCityBox' id='addCityBox' onclick=\"showCheckboxes('addCityCheckBox')\">" +
+                                "<select>" +
+                                    "<option>도시</option>" +
+                                "</select>" +
+                                "<div class='addCitySelect'></div>" +
+                            "</div>" +
+                            "<div id='addCityCheckBox'>" +
+                            "</div>" +
+                        "</div>" +
+                    "</form>"
+
+
     }
 
-    //combo box
+   /* //combo box
     function loadCity(e) {
 
         let korea=["서울","부산","대전","대구"];
@@ -245,7 +319,7 @@
         if(e.value == "한국") var d = korea;
         else if(e.value == "일본") var d = japan;
         else if(e.value == "중국") var d = china;
-
+k
         target.options.length = 0;
 
         for(x in d) {
@@ -254,17 +328,85 @@
             opt.innerHTML = d[x];
             target.appendChild(opt);
         }
+    }*/
+
+    //combo box
+    function loadCity(e) {
+
+        let korea=["서울","부산","대전","대구"];
+        let japan=["도쿄","오사카","후쿠오카","교토"];
+        let china=["상하이","광저우","산시성","베이징"];
+
+        var name = "";
+        if(e.name == "checkbox"){
+            var target = $("#cityCheckBox");
+            name = "dynamicCheckBox";
+        }else if(e.name == "addCheckbox"){
+            var target = $("#addCityCheckBox");
+            name = "addDynamicCheckBox";
+        }
+
+        if(e.value == "한국") var d = korea;
+        else if(e.value == "일본") var d = japan;
+        else if(e.value == "중국") var d = china;
+
+        var str = "";
+        target.empty();
+        str = "<label for='전체'>" +
+                   "<input type='checkbox' name='" + name + "' id='all' " +
+                                           "value='checkAll' onclick='checkAll(this)'/>전체</label>"
+
+
+        $.each(d, function(i){
+            console.log(d);
+                str += "<label for='" + d[i] + "'>";
+                str += "<input type='checkbox' name='" + name + "' id='" + d[i] + "'"
+                        + " value='" + d[i] + "'/>"
+                        + d[i] + "</label>";
+        });
+
+            console.log(str);
+            target.append(str);
+    }
+
+    //국가 , 나라
+    var expanded = false;
+
+    function showCheckboxes(e) {
+           var checkboxes = document.getElementById(e);
+
+          if (!expanded) {
+            checkboxes.style.display = "block";
+            expanded = true;
+          } else {
+            checkboxes.style.display = "none";
+            expanded = false;
+          }
     }
 
     //체크박스
     function checkAll(checkAll) {
         //getElementById는 id 속성값 하나를 가진 객체를 불러 오는것이고
         //getElementsByName은 name이 중복이 가능해 여러개의 값을 배열의 형태로 가져오게 된다고 함
-        const checkBoxes = document.getElementsByName("checkbox");
+        var name = checkAll.name
+        const checkBoxes = document.getElementsByName(name);
+
 
         checkBoxes.forEach((checkbox) => {
             checkbox.checked = checkAll.checked;
         })
+    }
+    //체크 하나만
+    function checkOnlyOne(e) {
+
+        const checkboxes
+          = document.getElementsByName(e.name);
+
+        checkboxes.forEach((cb) => {
+            cb.checked = false;
+        })
+
+        e.checked = true;
     }
 
     //delete 요청을 해서 boardNo을 리스트 형태로 보내서 삭제 하고 싶음
@@ -320,8 +462,25 @@
                 var id = $('#id').val();
                 var name = $('#name').val();
                 var gender = $('input[name="gender2"]:checked').val();
-                var country = $('#country').val();
-                var city = $('#city').val();
+                var country = $('input[name="checkbox"]:checked').val();
+                console.log(country);
+
+                var str = ""
+                var cityCheck = $('input[name="dynamicCheckBox"]:checked');
+                cityCheck.each(function(i){
+                    if(str == ""){
+                       if( $(this).val() == "checkAll"){
+                                str = "";
+                            }else{
+                                str = $(this).val();
+                          }
+                    }else{
+                      str += ", " + $(this).val();
+                    }
+                });
+                var city = str;
+                console.log(city);
+
                 var startDate = $('#startDate').val();
                 var endDate = $('#endDate').val();
 
@@ -348,7 +507,12 @@
                         var str = "";
 
                         $.each(data, function(i){
-                            str += "<tr>";
+                            if(tblData[i].gender == "남"){
+                                str += "<tr style='background-color:#CEE3F6;'>";
+                            }else {
+                                str += "<tr style='background-color:#F7F8E0;'>";
+                            }
+
                             str += "<th><input type='checkbox' name='checkbox'></th>";
                             str += "<th name='id'>" + tblData[i].id + "</th><th name='name'>"
                                             + tblData[i].name + "</th><th name='gender'>"
@@ -377,15 +541,27 @@
                     if($('#name2').val() ==""){ alert("다 기입하세요"); return;}
                     var name = $('#name2').val();
 
-
                     if($('input[name="gender2"]:checked').val() == undefined){ alert("다 기입하세요"); return;}
                     var gender = $('input[name="gender2"]:checked').val();
 
-                    if($('#country2').val() ==""){ alert("다 기입하세요"); return;}
-                    var country = $('#country2').val();
+                    if($('input[name="addCheckbox"]:checked').val() ==""){ alert("다 기입하세요"); return;}
+                    var country =  $('input[name="addCheckbox"]:checked').val();
 
-                    if($('#city2').val() ==""){ alert("다 기입하세요"); return;}
-                    var city = $('#city2').val();
+                    var str = "";
+                    var cityCheck = $('input[name="addDynamicCheckBox"]:checked');
+                    cityCheck.each(function(i){
+                        if(str == ""){
+                            if( $(this).val() == "checkAll"){
+                                str = "";
+                            }else{
+                                str = $(this).val();
+                          }
+                        }else{
+                          str += ", " + $(this).val();
+                        }
+                    });
+                    if(str == ""){ alert("다 기입하세요"); return;}
+                    var city = str;
 
                     var boardRequest = {
                         "id" : id,
@@ -426,20 +602,16 @@
         var title = "pop";
         openWin = window.open("modify",title, "width=570, height=350, resizable = no, scrollbars = no");
 
-        var tdArr = new Array();
-
         var tr = $(this);
         var td = tr.children();
 
-        td.each(function(i){
-            tdArr.push(td.eq(i).text());
-            });
+        id = td.eq(1).text();
+        name = td.eq(2).text();
+        gender = td.eq(3).text();
+        country = td.eq(4).text();
+        city = td.eq(5).text();
 
-           id = td.eq(1).text();
-           name = td.eq(2).text();
-           gender = td.eq(3).text();
-           country = td.eq(4).text();
-           city = td.eq(5).text();
+        console.log(city);
     });
 
        //datepicker

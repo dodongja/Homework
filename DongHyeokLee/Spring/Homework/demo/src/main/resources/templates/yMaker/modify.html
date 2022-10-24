@@ -2,14 +2,7 @@
 <html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
-    <style>
-        section {
-            width: 500px;             /* 너비 값 */
-            height: 500px;
-            padding: 15px;            /* 테두리와 내용물 사이의 여백 */
-            border: 5px solid gray;   /* 테두리 회색 실선 두께 - 5픽셀 */
-        }
-    </style>
+    <link rel="stylesheet" href="/yMaker/modify.css">
     <title>Title</title>
 
 </head>
@@ -29,18 +22,38 @@
         <label for="female">여</label>
 
         <br>
-        <input type="text" placeholder="국가" readonly/>
-        <select id="country" name="country" onchange="loadCity(this)">
-            <option value="">국가</option>
-            <option value="한국">한국</option>
-            <option value="일본">일본</option>
-            <option value="중국">중국</option>
-        </select>
-        <br>
-        <input type="text" placeholder="도시" readonly/>
-        <select id="city" name="city">
-            <option value="">도시</option>
-        </select>
+        <!-- 국가 -->
+        <div class="countryMultiselect">
+            <div class="countryBox" onclick="showCheckboxes('countryCheckBox')">
+                <select>
+                    <option>국가</option>
+                </select>
+                <div class="countrySelect"></div>
+            </div>
+            <div id="countryCheckBox">
+                <label for="한국">
+                    <input type="checkbox" name="checkbox" id="한국" value="한국"
+                           onclick="loadCity(this);checkOnlyOne(this);"/>한국</label>
+                <label for="일본">
+                    <input type="checkbox" name="checkbox" id="일본" value="일본"
+                           onclick="loadCity(this);checkOnlyOne(this);"/>일본</label>
+                <label for="중국">
+                    <input type="checkbox" name="checkbox" id="중국" value="중국"
+                           onclick="loadCity(this);checkOnlyOne(this);"/>중국</label>
+            </div>
+        </div>
+
+        <!-- 도시 -->
+        <div class="cityMultiselect">
+            <div class="cityBox" onclick="showCheckboxes('cityCheckBox')">
+                <select>
+                    <option>도시</option>
+                </select>
+                <div class="citySelect"></div>
+            </div>
+            <div id="cityCheckBox">
+            </div>
+        </div>
 
         <div>
             <button type="button" onclick="saveBtn()">저장</button>
@@ -62,40 +75,82 @@
               $(":radio[name='gender'][value='" + gender +"']").attr('checked', true);
 
               var country = window.opener.country;
-              $('#country').val(country);
-               console.log("국가" + country);
-
+              document.getElementById(country).checked = true;
               loadCity(country);
 
               var city = window.opener.city;
-              $('#city').val(city);
+              var cityArr = city.split(', ');
+              console.log(cityArr);
+
+              for(let i = 0; i < cityArr.length; i++){
+                console.log(cityArr[i]);
+                document.getElementById(cityArr[i]).checked = true;
+         }
+
 
 
         });
-        //동적 select
-        function loadCity(e) {
-            console.log("e" + e);
-            let korea=["서울","부산","대전","대구"];
-            let japan=["도쿄","오사카","후쿠오카","교토"];
-            let china=["상하이","광저우","산시성","베이징"];
+    //combo box
+    function loadCity(e) {
 
-            var target = document.getElementById("city");
+        let korea=["서울","부산","대전","대구"];
+        let japan=["도쿄","오사카","후쿠오카","교토"];
+        let china=["상하이","광저우","산시성","베이징"];
+
+        var name = "";
+        var target = $("#cityCheckBox");
+        name = "dynamicCheckBox";
 
 
-            if(e.value == "한국" || e == "한국") var d = korea;
-            else if(e.value == "일본" || e == "일본") var d = japan;
-            else if(e.value == "중국" || e == "중국") var d = china;
+        if(e == "한국") var d = korea;
+        else if(e == "일본") var d = japan;
+        else if(e == "중국") var d = china;
 
-            target.options.length = 0;
+        var str = "";
+        target.empty();
+        str = "<label for='전체'>" +
+                   "<input type='checkbox' name='" + name + "' id='all' " +
+                                           "value='checkAll' onclick='checkAll(this)'/>전체</label>"
 
-            for(x in d) {
-                let opt = document.createElement("option");
-                console.log(d[x]);
-                opt.value = d[x];
-                opt.innerHTML = d[x];
-                target.appendChild(opt);
-            }
-       }
+
+        $.each(d, function(i){
+                str += "<label for='" + d[i] + "'>";
+                str += "<input type='checkbox' name='" + name + "' id='" + d[i] + "'"
+                        + " value='" + d[i] + "'/>"
+                        + d[i] + "</label>";
+        });
+
+
+        target.append(str);
+    }
+
+    //국가 , 나라 선택
+    var expanded = false;
+
+    function showCheckboxes(e) {
+           var checkboxes = document.getElementById(e);
+
+          if (!expanded) {
+            checkboxes.style.display = "block";
+            expanded = true;
+          } else {
+            checkboxes.style.display = "none";
+            expanded = false;
+          }
+    }
+    //체크 하나만
+    function checkOnlyOne(e) {
+         console.log(e);
+        const checkboxes
+          = document.getElementsByName(e.name);
+
+        checkboxes.forEach((cb) => {
+            cb.checked = false;
+        })
+
+        e.checked = true;
+    }
+
 
        //저장
        function saveBtn() {
@@ -109,10 +164,24 @@
                     var gender = $('input[name="gender"]:checked').val();
 
                     if($('#country').val() ==""){ alert("다 기입하세요"); return;}
-                    var country = $('#country').val();
+                    var country =  $('input[name="addCheckbox"]:checked').val();
 
-                    if($('#city').val() ==""){ alert("다 기입하세요"); return;}
-                    var city = $('#city').val();
+                    var str = "";
+                    var cityCheck = $('input[name="addDynamicCheckBox"]:checked');
+                    cityCheck.each(function(i){
+                        if(str == ""){
+                            if( $(this).val() == "checkAll"){
+                                str = "";
+                            }else{
+                                str = $(this).val();
+                          }
+                        }else{
+                          str += ", " + $(this).val();
+                        }
+                    });
+                    if(str == ""){ alert("다 기입하세요"); return;}
+                    var city = str;
+
 
                 var boardRequest = {
                         "id" : id,
@@ -143,6 +212,10 @@
                                //alert("아이디 중복 입니다");
                     }
                 });
+       }
+
+       function cancelBtn() {
+            window.close();
        }
 
 

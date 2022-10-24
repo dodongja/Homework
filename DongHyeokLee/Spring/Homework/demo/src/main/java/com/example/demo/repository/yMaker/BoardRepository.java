@@ -81,7 +81,7 @@ public class BoardRepository {
             querySQL.append("and gender = ? ");
             queryArgs.add(board.getGender());
         }
-        if(!board.getCountry().equals("")){
+        if(board.getCountry()!=null && !board.getCountry().equals("")){
             querySQL.append("and country = ? ");
             queryArgs.add(board.getCountry());
         }
